@@ -1,0 +1,73 @@
+<div class="container">
+    <h1>To-Do Application</h1>
+    <hr>
+    
+    <form (ngSubmit)="onSubmit(taskForm)" #taskForm="ngForm">
+      <div class="form-group">
+        <label for="task">Task</label>
+        <input type="text" class="form-control" id="task" placeholder="Enter task" ngModel name="task" required>
+        <small *ngIf="taskForm.invalid && taskForm.dirty" class="form-text text-danger">Required field</small>
+      </div>
+  
+      <div class="form-group">
+        <label for="priority">Priority</label>
+        <select class="form-control" id="priority" ngModel name="priority" required>
+          <option *ngFor="let priority of priorities" [value]="priority">{{priority}}</option>
+        </select>
+      </div>
+  
+      <div class="form-group">
+        <label for="dueDate">Due Date</label>
+        <input type="date" class="form-control" id="dueDate" ngModel name="dueDate">
+      </div>
+  
+      <button [disabled]="taskForm.invalid" type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+    
+    <hr>
+  
+    <!-- Search Bar -->
+    <div class="mb-3">
+      <input type="text" class="form-control" [(ngModel)]="searchQuery" (input)="onSearch(searchQuery)" placeholder="Search tasks">
+    </div>
+  
+    <!-- Sort Buttons -->
+    <div class="mb-3">
+      <button class="btn btn-info btn-sm" (click)="sortTasks('taskName')">Sort by Name</button>
+      <button class="btn btn-warning btn-sm" (click)="sortTasks('priority')">Sort by Priority</button>
+      <button class="btn btn-success btn-sm" (click)="sortTasks('dueDate')">Sort by Due Date</button>
+    </div>
+  
+    <!-- Filter Buttons -->
+    <div class="mb-3">
+      <button class="btn btn-info btn-sm" (click)="filterTasks('all')">All</button>
+      <button class="btn btn-success btn-sm" (click)="filterTasks('completed')">Completed</button>
+      <button class="btn btn-warning btn-sm" (click)="filterTasks('pending')">Pending</button>
+      <button class="btn btn-danger btn-sm" (click)="clearAllTasks()">Clear All</button>
+    </div>
+  
+    <!-- Task Table -->
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Task</th>
+          <th scope="col">Priority</th>
+          <th scope="col">Due Date</th>
+          <th scope="col">Completed</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of filteredTasks; index as i">
+          <td>{{ t.taskName }}</td>
+          <td>{{ t.priority }}</td>
+          <td>{{ t.dueDate || 'No due date' }}</td>
+          <td><input (change)="onCheck(i)" type="checkbox" [checked]="t.isCompleted"></td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="onDelete(i)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
